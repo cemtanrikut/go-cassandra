@@ -32,3 +32,28 @@ func init() {
 		panic(err)
 	}
 }
+
+// Create
+func Create(name string, age int) error {
+	id := gocql.TimeUUID()
+	return session.Query(`INSERT INTO person (id, name, age) VALUES (?, ?, ?)`, id, name, age).Exec()
+}
+
+// Read
+func Get(id gocql.UUID) (*Person, error) {
+	var person Person
+	if err := session.Query(`SELECT id, name, age FROM person WHERE id = ?`, id).Scan(&person.ID, &person.Name, &person.Surname); err != nil {
+		return nil, err
+	}
+	return &person, nil
+}
+
+// Update
+func Update(id gocql.UUID, name, surname string) error {
+	return session.Query(`UPDATE person SET name = ?, surname = ? WHERE id = ?`, name, surname, id).Exec()
+}
+
+// Delete
+func Delete(id gocql.UUID) error {
+	return session.Query(`DELETE FROM person WHERE id = ?`, id).Exec()
+}
