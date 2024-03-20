@@ -34,9 +34,8 @@ func init() {
 }
 
 // Create
-func Create(name string, age int) error {
-	id := gocql.TimeUUID()
-	return session.Query(`INSERT INTO person (id, name, age) VALUES (?, ?, ?)`, id, name, age).Exec()
+func Create(personID gocql.UUID, name string, surname string) error {
+	return session.Query(`INSERT INTO person (id, name, surname) VALUES (?, ?, ?)`, personID, name, surname).Exec()
 }
 
 // Read
